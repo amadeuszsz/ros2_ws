@@ -2,7 +2,7 @@
 set -e
 
 # Set the default build type
-BUILD_TYPE=RelWithDebInfo
+BUILD_TYPE=Release
 colcon build \
         --merge-install \
         --symlink-install \

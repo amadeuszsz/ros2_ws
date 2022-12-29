@@ -1,3 +1,18 @@
+# ros2_ws
+
+Tiny changes with reference to the original repository. Several tasks and launch settings have been changed. Moreover, in this case container has to be created with [Rocker](https://github.com/osrf/rocker) using your own docker image.
+* Validate your `ROS2_WORKSPACE_DIR` arg in .devcontainer/build.sh. It should match the name of your workspace. You can build image with script file.
+```
+cd .devcontainer
+./build.sh
+```
+* To run container use `run.sh` script.
+* To attach container to a new terminal use `enter.sh` script.
+* To use extensions, go to Extensions tab (Ctrl + Shift + X), click Cloud icon (Install Local Extensions in...) next to the Container section, select all extensions and install.
+
+
+The original documentation is below.
+
 # VSCode ROS2 Workspace Template
 
 This template will get you set up using ROS2 with VSCode as your IDE.

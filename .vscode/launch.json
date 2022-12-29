@@ -4,7 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-    // Example launch of a python file
+    // Base launch of a python file
     {
       "name": "Python: Current File",
       "type": "python",
@@ -12,15 +12,14 @@
       "program": "${file}",
       "console": "integratedTerminal",
     },
-    // Example gdb launch of a ros executable
+    // Base gdb launch of a ros executable
     {
       "name": "(gdb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/install/lib/${input:package}/${input:program}",
-      "args": [],
-      "preLaunchTask": "build",
-      "stopAtEntry": true,
+      "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:program}",
+      "args": ["--ros-args", "-r", "__ns:=${input:namespace}", "--params-file", "${workspaceFolder}/install/${input:package}/share/${input:package}/${input:config}"],
+      "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "externalConsole": false,
       "MIMode": "gdb",
@@ -36,15 +35,31 @@
   "inputs": [
     {
       "id": "package",
-      "type": "promptString",
-      "description": "Package name",
-      "default": "examples_rclcpp_minimal_publisher"
+      "type": "pickString",
+      "description": "Package name.",
+      "default": "",
+      "options": ["example_package"]
     },
     {
       "id": "program",
-      "type": "promptString",
-      "description": "Program name",
-      "default": "publisher_member_function"
+      "type": "pickString",
+      "description": "Program name.",
+      "default": "",
+      "options": ["example_node_exe"]
+    },
+    {
+      "id": "config",
+      "type": "pickString",
+      "description": "Config relative path.",
+      "default": "",
+      "options": ["param/defaults.param.yaml"]
+    },
+    {
+      "id": "namespace",
+      "type": "pickString",
+      "description": "Program namespace.",
+      "default": "/",
+      "options": ["/", "/example_namespace"]
     }
   ]
 }

@@ -5,39 +5,61 @@
     "tasks": [
         // Build tasks
         {
-            "label": "build",
-            "detail": "Build workspace (default)",
+            "label": "build_release_workspace",
+            "detail": "Build workspace with release build type.",
             "type": "shell",
-            "command": "./build.sh",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": "$gcc"
+            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
         },
         {
-            "label": "debug",
-            "detail": "Build workspace (debug)",
+            "label": "build_debug_workspace",
+            "detail": "Build workspace with release build type.",
             "type": "shell",
-            "command": "./build.sh",
-            "options": {
-                "env": {
-                    "BUILD_TYPE": "Debug"
-                }
-            },
-            "group": "build",
-            "problemMatcher": "$gcc"
+            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_release_single_package",
+            "detail": "Build single package with release build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_debug_single_package",
+            "detail": "Build single package with debug build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_release_upto_package",
+            "detail": "Build up-to package with release build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build_debug_upto_package",
+            "detail": "Build up-to package with debug build type.",
+            "type": "shell",
+            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "problemMatcher": ["$gcc"]
         },
         // Test tasks
         {
             "label": "test",
-            "detail": "Run all unit tests and show results.",
+            "detail": "Run all unit tests.",
             "type": "shell",
-            "command": "./test.sh",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            }
+            "command": "colcon test",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "test_result",
+            "detail": "Show test results.",
+            "type": "shell",
+            "command": "colcon test-result",
+            "problemMatcher": ["$gcc"]
         },
         // Clean
         {
@@ -45,7 +67,7 @@
             "detail": "Run the clean target",
             "type": "shell",
             "command": "colcon build --cmake-target clean",
-            "problemMatcher": "$gcc"
+            "problemMatcher": ["$gcc"]
         },
         {
             "label": "purge",
@@ -59,14 +81,14 @@
             "label": "fix",
             "detail": "Reformat files with uncrustify.",
             "type": "shell",
-            "command": "ament_uncrustify --reformat src/",
+            "command": "ament_uncrustify --reformat ${file}",
             "problemMatcher": []
         },
         {
             "label": "uncrustify",
             "detail": "Lint files with uncrustify.",
             "type": "shell",
-            "command": "ament_uncrustify src/",
+            "command": "ament_uncrustify ${file}",
             "presentation": {
                 "panel": "dedicated",
                 "reveal": "silent",
@@ -94,7 +116,7 @@
             "detail": "Lint files with cpplint.",
             "type": "ament",
             "task": "cpplint",
-            "path": "src/",
+            "path": "${file}",
             "problemMatcher": [
                 "$ament_cpplint"
             ],
@@ -109,7 +131,7 @@
             "detail": "Run static code checker cppcheck.",
             "type": "ament",
             "task": "cppcheck",
-            "path": "src/",
+            "path": "${file}",
             "problemMatcher": [
                 "$ament_cppcheck"
             ],
@@ -118,18 +140,13 @@
                 "reveal": "silent",
                 "clear": true
             },
-            "options": {
-                "env": {
-                    "AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS": "1"
-                }
-            }
         },
         {
             "label": "lint_cmake",
             "detail": "Run lint on cmake files.",
             "type": "ament",
             "task": "lint_cmake",
-            "path": "src/",
+            "path": "${file}",
             "problemMatcher": [
                 "$ament_lint_cmake"
             ],
@@ -144,7 +161,7 @@
             "detail": "Run flake8 on python files.",
             "type": "ament",
             "task": "flake8",
-            "path": "src/",
+            "path": "${file}",
             "problemMatcher": [
                 "$ament_flake8"
             ],
@@ -159,7 +176,7 @@
             "detail": "Run pep257 on python files.",
             "type": "ament",
             "task": "pep257",
-            "path": "src/",
+            "path": "${file}",
             "problemMatcher": [
                 "$ament_pep257"
             ],
@@ -174,7 +191,7 @@
             "detail": "Run xmllint on xml files.",
             "type": "ament",
             "task": "xmllint",
-            "path": "src/",
+            "path": "${file}",
             "problemMatcher": [ 
                 "$ament_xmllint",
             ],
@@ -183,20 +200,6 @@
                 "reveal": "silent",
                 "clear": true
             }
-        },
-        {
-            "label": "lint all",
-            "detail": "Run all linters.",
-            "dependsOn": [
-                "cppcheck",
-                "cpplint",
-                "flake8",
-                "lint_cmake",
-                "pep257",
-                "xmllint",
-                "uncrustify"
-            ],
-            "problemMatcher": []
         },
         // Workspace editing tasks
         {
@@ -217,31 +220,23 @@
             "label": "import from workspace file",
             "detail": "Use vcs to import modules specified by a workspace/rosinstall file.",
             "type": "shell",
-            "command": "vcs import < src/ros2.repos src",
+            "command": "vcs import < default.repos",
             "problemMatcher": []
         },
         {
             "label": "update workspace file",
             "detail": "Use vcs to update repositories in src to workspace file.",
             "type": "shell",
-            "command": "vcs export src > src/ros2.repos",
+            "command": "vcs export > default.repos",
             "problemMatcher": []
         },
         {
             "label": "install dependencies",
             "detail": "Install all dependencies specified in the workspaces package.xml files.",
             "type": "shell",
-            "command": "sudo apt-get update && rosdep update && rosdep install --from-paths src --ignore-src -y",
+            "command": "sudo apt-get update && rosdep install --from-paths src --ignore-src -yr",
             "problemMatcher": []
         },
-        {
-            "label": "setup",
-            "detail": "Set up the workspace",
-            "type": "shell",
-            "command": "./setup.sh",
-            "problemMatcher": []
-        }
-
     ],
     "inputs": [
         {

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-./setup.sh
-./build.sh
-./test.sh
+./.github/scripts/setup.sh
+./.github/scripts/build.sh
+./.github/scripts/test.sh

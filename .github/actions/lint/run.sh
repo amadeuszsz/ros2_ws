@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-./setup.sh
+./.github/scripts/setup.sh
 ament_${LINTER} src/

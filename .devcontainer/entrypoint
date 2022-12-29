@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+
+if [ -f /home/${USER}/${ROS2_WORKSPACE_DIR}/install/setup.bash ]; then 
+    echo "source /home/${USER}/${ROS2_WORKSPACE_DIR}/install/setup.bash" >> /home/${USER}/.bashrc; 
+fi
+
+echo 'Startup completed.'
+exec "$@"
