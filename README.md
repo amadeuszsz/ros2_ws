@@ -9,6 +9,7 @@ cd .devcontainer
 * To run container use `run.sh` script.
 * To attach container to a new terminal use `enter.sh` script.
 * To use extensions, go to Extensions tab (Ctrl + Shift + X), click Cloud icon (Install Local Extensions in...) next to the Container section, select all extensions and install.
+* To create a new package, [create_pkg](https://github.com/amadeuszsz/create_pkg.git) tool is recommended (added to `default.repos` file already).
 
 
 The original documentation is below.
