@@ -3,8 +3,8 @@
 set -e
 
 
-if [ -f /home/${USER}/${ROS2_WORKSPACE_DIR}/install/setup.bash ]; then 
-    echo "source /home/${USER}/${ROS2_WORKSPACE_DIR}/install/setup.bash" >> /home/${USER}/.bashrc; 
+if [ -f /home/${USER}/${WORKSPACE}/install/setup.bash ]; then
+    echo "source /home/${USER}/${WORKSPACE}/install/setup.bash" >> /home/${USER}/.bashrc;
 fi
 
 echo 'Startup completed.'
