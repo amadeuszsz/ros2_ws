@@ -8,42 +8,42 @@
             "label": "build_release_workspace",
             "detail": "Build workspace with release build type.",
             "type": "shell",
-            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_debug_workspace",
             "detail": "Build workspace with release build type.",
             "type": "shell",
-            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_release_single_package",
             "detail": "Build single package with release build type.",
             "type": "shell",
-            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_debug_single_package",
             "detail": "Build single package with debug build type.",
             "type": "shell",
-            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_release_upto_package",
             "detail": "Build up-to package with release build type.",
             "type": "shell",
-            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_debug_upto_package",
             "detail": "Build up-to package with debug build type.",
             "type": "shell",
-            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         // Test tasks
