@@ -1,19 +1,6 @@
 # ros2_ws
 
-Tiny changes with reference to the original repository. Several tasks and launch settings have been changed. Moreover, in this case container has to be created with [Rocker](https://github.com/osrf/rocker) using your own docker image.
-* Validate your `ROS2_WORKSPACE_DIR` arg in .devcontainer/build.sh. It should match the name of your workspace. You can build image with script file.
-```
-cd .devcontainer
-./build.sh
-```
-* To run container use `run.sh` script.
-* To attach container to a new terminal use `enter.sh` script.
-* To develop with VS Code, go to Remote Explorer tab and select Attach to Container next to your container name (ms-vscode.remote-explorer extension required).
-* To use extensions inside container, go to Extensions tab (Ctrl + Shift + X), click Cloud icon (Install Local Extensions in...) next to the Container section, select all extensions and install.
-* To create a new package, [create_pkg](https://github.com/amadeuszsz/create_pkg.git) tool is recommended (added to `default.repos` file already).
-
-
-The original documentation is below.
+Tiny changes with reference to the original repository. Several tasks and launch settings have been changed. Moreover, in this case container has to be created with [rocker](https://github.com/osrf/rocker) using your own docker image. The instructions have been updated.
 
 # VSCode ROS2 Workspace Template
 
@@ -60,6 +47,7 @@ You should already have Docker and VSCode with the remote containers plugin inst
 * [docker](https://docs.docker.com/engine/install/)
 * [vscode](https://code.visualstudio.com/)
 * [vscode remote containers plugin](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+* [rocker](https://github.com/osrf/rocker)
 
 ### Get the template
 
@@ -81,32 +69,69 @@ Now you can clone your repo as normal
 
 ![template_download](https://user-images.githubusercontent.com/6098197/91332342-e4e0f680-e780-11ea-9525-49b0afa0e4bb.png)
 
-### Open it in vscode
+### Download extensions
 
-Now that you've cloned your repo onto your computer, you can open it in VSCode (File->Open Folder). 
+Open VSCode and download required extensions (Ctrl + Shift + X) on your host:
+```
+althack.ament-task-provider
+DotJoshJohnson.xml
+ms-azuretools.vscode-docker
+ms-iot.vscode-ros
+ms-python.python
+ms-vscode.cpptools
+ms-vscode-remote.vscode-remote-extensionpack
+redhat.vscode-yaml
+smilerobotics.urdf
+streetsidesoftware.code-spell-checker
+twxs.cmake
+yzhang.markdown-all-in-one
+zachflower.uncrustify
+```
 
-When you open it for the first time, you should see a little popup that asks you if you would like to open it in a container.  Say yes!
+### Build and run
 
-![template_vscode](https://user-images.githubusercontent.com/6098197/91332551-36898100-e781-11ea-9080-729964373719.png)
+Build your Docker image. If needed, edit `.devcontainer/Dockerfile` and add your dependencies. Make sure arg `WORKSPACE` in `build.sh` has the same value as your workspace name.
+```bash
+cd path/to/your/workspace
+cd .devcontainer
+./build.sh
+cd ..
+./run.sh
+cd your_workspace
+vcs import < default.repos
+colcon build
+```
+To attach container to new terminal use `enter.sh`.
 
-If you don't see the pop-up, click on the little green square in the bottom left corner, which should bring up the container dialog
+### Attach to container
 
-![template_vscode_bottom](https://user-images.githubusercontent.com/6098197/91332638-5d47b780-e781-11ea-9fb6-4d134dbfc464.png)
+Now that you've run your container, you can attach to it using VSCode through Remote Explorer (right mouse click on container name -> `Attach to Container`).
 
-In the dialog, select "Remote Containers: Reopen in container"
+![attach_vscode](https://user-images.githubusercontent.com/37396312/212543105-3a0b01ec-fe66-4586-9a9a-526e4e294f3f.png)
 
-VSCode will build the dockerfile inside of `.devcontainer` for you.  If you open a terminal inside VSCode (Terminal->New Terminal), you should see that your username has been changed to `ros`, and the bottom left green corner should say "Dev Container"
+When you build your image, you have to install extensions (which you already have on your host) inside the container. To do that, go to Extensions tab (Ctrl + Shift + X), click Cloud icon (Install Local Extensions in...) next to the Container section, select all extensions and install.
 
-![template_container](https://user-images.githubusercontent.com/6098197/91332895-adbf1500-e781-11ea-8afc-7a22a5340d4a.png)
+![install_extensions](https://user-images.githubusercontent.com/37396312/212544102-ad98c50d-a270-4855-aea6-a0108ba2e4d9.png)
 
+Now you can open your workspace in the container. In Explorer tab (CRT + Shift + E) choose `Open Folder` and select your workspace folder.
+
+### Predefined tasks usage and debugging
+
+`.vscode` contains predefined list of tasks for currently open file. You should pass all the test regarding to the file type (ctrl + shift + p -> Tasks: Run task):
+* C++ - fix, uncrustify, cpplint, cppcheck
+* CMakesLists.txt - lint_cmake
+* Python - flake8, pep257
+* XML - xmllint
+
+Moreover, several build tasks are available. Check `.vscode/tasks.json` file to speedup your development, especially `new ROS2 package` task which call custom package creation script with a few build type layout.
+To debug your code, switch beetween C++/Python debug mode (Ctrl + Shift + D) and run `Debug: Start Debugging` (F5). The debug call is defined in `.vscode/launch.json` file, thus you need to modify it to fit your needs (e.g. add your package name, executable name etc. to `pickString` inputs).
 
 ### Update the template with your code
 
-1. Specify the repositories you want to include in your workspace in `src/ros2.repos` or delete `src/ros2.repos` and develop directly within the workspace.
-2. If you are using a `ros2.repos` file, import the contents `Terminal->Run Task..->import from workspace file`
-2. Install dependencies `Terminal->Run Task..->install dependencies`
-3. (optional) Adjust scripts to your liking.  These scripts are used both within tasks and CI.
-   1. `setup.sh` The setup commands for your code.  Default to import workspace and install dependencies.
-   2. `build.sh` The build commands for your code.  Default to `--merge-install` and `--symlink-install`
-   3. `test.sh` The test commands for your code.
-4. Develop!
+1. Specify the repositories you want to include in your workspace in `src/default.repos`.
+2. If you are using a `default.repos` file, import the contents `Terminal->Run Task..->import from workspace file`.
+3. Update your repositories `Terminal->Run Task..->update repositories`.
+4. Install dependencies `Terminal->Run Task..->install dependencies`.
+5. Build your workspace/package/up-to package using Release/Debug build type `Terminal->Run Task..->build...`.
+6. Test your repositories `Terminal->Run Task..->test`.
+7. Develop!

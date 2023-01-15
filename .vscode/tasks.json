@@ -8,42 +8,42 @@
             "label": "build_release_workspace",
             "detail": "Build workspace with release build type.",
             "type": "shell",
-            "command": "colcon build --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_debug_workspace",
             "detail": "Build workspace with release build type.",
             "type": "shell",
-            "command": "colcon build --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --symlink-install --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_release_single_package",
             "detail": "Build single package with release build type.",
             "type": "shell",
-            "command": "colcon build --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_debug_single_package",
             "detail": "Build single package with debug build type.",
             "type": "shell",
-            "command": "colcon build --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --symlink-install --packages-select ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_release_upto_package",
             "detail": "Build up-to package with release build type.",
             "type": "shell",
-            "command": "colcon build --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Release\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         {
             "label": "build_debug_upto_package",
             "detail": "Build up-to package with debug build type.",
             "type": "shell",
-            "command": "colcon build --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
+            "command": "colcon build --symlink-install --packages-up-to ${input:package} --cmake-args \"-DCMAKE_BUILD_TYPE=Debug\" \"-DCMAKE_EXPORT_COMPILE_COMMANDS=On\" -Wall -Wextra -Wpedantic",
             "problemMatcher": ["$gcc"]
         },
         // Test tasks
@@ -51,14 +51,7 @@
             "label": "test",
             "detail": "Run all unit tests.",
             "type": "shell",
-            "command": "colcon test",
-            "problemMatcher": ["$gcc"]
-        },
-        {
-            "label": "test_result",
-            "detail": "Show test results.",
-            "type": "shell",
-            "command": "colcon test-result",
+            "command": "colcon test && colcon test-result --verbose",
             "problemMatcher": ["$gcc"]
         },
         // Clean
@@ -73,7 +66,7 @@
             "label": "purge",
             "detail": "Purge workspace by deleting all generated files.",
             "type": "shell",
-            "command": "rm -fr build install log; py3clean .",
+            "command": "rm -r build install log && py3clean .",
             "problemMatcher": []
         },
         // Linting and static code analysis tasks
@@ -203,17 +196,10 @@
         },
         // Workspace editing tasks
         {
-            "label": "new ament_cmake package",
-            "detail": "Create a new ROS cpp package from a template.",
+            "label": "new ROS2 package",
+            "detail": "Create a new ROS2 package from a template.",
             "type": "shell",
-            "command": "ros2 pkg create --destination-directory src --build-type ament_cmake ${input:package}",
-            "problemMatcher": []
-        },
-        {
-            "label": "new ament_python package",
-            "detail": "Create a new ROS python package from a template.",
-            "type": "shell",
-            "command": "ros2 pkg create --destination-directory src --build-type ament_python ${input:package}",
+            "command": "source ${workspaceFolder}/install/setup.bash && ros2 run create_pkg main.py --pkg-name ${input:package} --maintainer \"${input:maintainer}\" --email ${input:email} --description \"${input:description}\" --destination ${input:destination} --type ${input:type}",
             "problemMatcher": []
         },
         {
@@ -224,17 +210,17 @@
             "problemMatcher": []
         },
         {
-            "label": "update workspace file",
-            "detail": "Use vcs to update repositories in src to workspace file.",
+            "label": "update repositories",
+            "detail": "Use vcs to pull the latest version of all repositories in the workspace.",
             "type": "shell",
-            "command": "vcs export > default.repos",
+            "command": "vcs pull src",
             "problemMatcher": []
         },
         {
             "label": "install dependencies",
             "detail": "Install all dependencies specified in the workspaces package.xml files.",
             "type": "shell",
-            "command": "sudo apt-get update && rosdep install --from-paths src --ignore-src -yr",
+            "command": "sudo apt-get update && rosdep install --from-paths src --ignore-src -yr || (rosdep update && rosdep install --from-paths src --ignore-src -yr)",
             "problemMatcher": []
         },
     ],
@@ -243,6 +229,34 @@
           "id": "package",
           "type": "promptString",
           "description": "Package name"
-        }
+        },
+        {
+            "id": "maintainer",
+            "type": "promptString",
+            "description": "Package maintainer (name and surname)"
+        },
+        {
+            "id": "email",
+            "type": "promptString",
+            "description": "Maintainer email"
+        },
+        {
+            "id": "description",
+            "type": "promptString",
+            "description": "Package description"
+        },
+        {
+            "id": "destination",
+            "type": "promptString",
+            "default": "src",
+            "description": "Package destination (relative path from workspace root), without package"
+        },
+        {
+            "id": "type",
+            "type": "pickString",
+            "description": "Package type",
+            "default": "cpp",
+            "options": ["cpp", "python_cmake", "python_setuptools", "launch"]
+        },
       ]
 }

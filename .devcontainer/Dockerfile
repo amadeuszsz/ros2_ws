@@ -20,6 +20,7 @@ ENV ROS_VERSION=2
 # install packages & setup locales
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     apt-utils \
+    bash-completion \
     build-essential \
     ca-certificates \
     curl \
@@ -30,7 +31,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     keyboard-configuration \
     locales \
     lsb-release \
+    python3-pip \
     software-properties-common \
+    vim \
+    wget \
     && rm -rf /var/lib/apt/lists/* \
     && locale-gen en_US.UTF-8; dpkg-reconfigure -f noninteractive locales
 
@@ -43,7 +47,8 @@ ENV LANG="en_US.UTF-8" \
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    ros-humble-ros-core \
+    ros-humble-ros-base \
+    ros-humble-rviz2 \
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-vcstool \
@@ -52,10 +57,9 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o
     && /bin/bash -c 'source /opt/ros/humble/setup.bash; rosdep init'
 
 
-# install your custom packages
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#    package_name_1 \
-#    package_name_2
+# install python packages
+RUN python3 -m pip --no-cache-dir install \
+    setuptools==58.2.0
 
 
 # customize bash
@@ -64,6 +68,18 @@ RUN curl -L https://raw.github.com/git/git/master/contrib/completion/git-prompt.
     && cat /tmp/bashrc-git-prompt >> /etc/skel/.bashrc \
     && rm -rf /tmp/bashrc-git-prompt \
     && echo "source /opt/ros/humble/setup.bash" >> /etc/skel/.bashrc
+
+
+# install your custom packages
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#    package_name_1 \
+#    package_name_2
+
+
+# install your custom python packages
+# RUN python3 -m pip --no-cache-dir install \
+#    package_name_1 \
+#    package_name_2
 
 
 # set up entrypoint
