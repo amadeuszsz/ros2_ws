@@ -49,18 +49,13 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ros-humble-ros-base \
     ros-humble-rviz2 \
+    python3-autopep8 \
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-vcstool \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && /bin/bash -c 'source /opt/ros/humble/setup.bash; rosdep init'
-
-
-# install python packages
-RUN python3 -m pip --no-cache-dir install \
-    setuptools==58.2.0
-
 
 # customize bash
 COPY bashrc-git-prompt /tmp/
@@ -70,14 +65,13 @@ RUN curl -L https://raw.github.com/git/git/master/contrib/completion/git-prompt.
     && echo "source /opt/ros/humble/setup.bash" >> /etc/skel/.bashrc
 
 
+# install python packages
+RUN python3 -m pip --no-cache-dir install \
+    setuptools==58.2.0
+
+
 # install your custom packages
 # RUN apt-get update && apt-get install -y --no-install-recommends \
-#    package_name_1 \
-#    package_name_2
-
-
-# install your custom python packages
-# RUN python3 -m pip --no-cache-dir install \
 #    package_name_1 \
 #    package_name_2
 

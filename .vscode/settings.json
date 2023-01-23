@@ -17,14 +17,18 @@
         "/opt/ros/humble/lib/python3.10/site-packages/"
     ],
     // Environment file lets vscode find python files within workspace
-    "python.envFile": "${workspaceFolder}/.env",
+    // "python.envFile": "${workspaceFolder}/.env",
     // Use the system installed version of autopep8
+    "editor.formatOnSave": false,
+    "python.formatting.provider": "autopep8",
     "python.formatting.autopep8Path": "/usr/bin/autopep8",
     "python.formatting.autopep8Args": [
-        "--max-line-length=100"
+        "--max-line-length",
+        "99",
+        "--experimental"
     ],
     "C_Cpp.default.intelliSenseMode": "linux-gcc-x86",
-    "C_Cpp.formatting": "Disabled",
+    "C_Cpp.formatting": "disabled",
     "uncrustify.configPath.linux": "/opt/ros/humble/lib/python3.10/site-packages/ament_uncrustify/configuration/ament_code_style.cfg",
     "[cpp]": {
         "editor.defaultFormatter": "zachflower.uncrustify"
