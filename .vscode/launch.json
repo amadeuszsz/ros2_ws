@@ -68,7 +68,7 @@
       "type": "pickString",
       "description": "Config relative path.",
       "default": "",
-      "options": ["param/defaults.param.yaml"]
+      "options": ["config/${input:package}.param.yaml"]
     },
     {
       "id": "namespace",
